@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PreviewImage</title>
+    <link rel="stylesheet" href="app.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+      .app{
+        width:100%;
+        max-width:300px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <div id="image" class="inline-image-preview"></div>
+      <input name="file" type="file" id="file" class="form-control" />
+    </div>
+    <script src="app.js"></script>
+    <script>
+      const file = document.getElementById("file");
+      const imageElm = document.getElementById("image");
+      file.addEventListener("change", function () {
+        InitImagePreview(this, imageElm);
+      });
+    </script>
+  </body>
+</html>
