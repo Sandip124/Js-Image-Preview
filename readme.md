@@ -3,6 +3,8 @@
 The Image preview feature was awesome but it was not looking nice as if some css is missing so this could be the solution.
 we just need to consider these in order to make our form nicer and also added clear button for the image preview. to clear the image.
 
+[View Demo](https://js-image-preview.now.sh/)
+
 Create Form
 -
 
