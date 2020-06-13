@@ -51,7 +51,12 @@ function InitImagePreview(input,imageElm) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function (e) {
-            setImageAttribute(imageElm,e.target.result)
+            const imageUrl = e.target.result;
+            if(isBase64(imageUrl.split(',')[1])) {
+                imageElm.style.backgroundImage = 'url(' + imageUrl + ')';
+                imageElm.style.border = '1px solid #ddd';
+            }
+            if (!imageElm.hasChildNodes()) {
             const btn = document.createElement('button');
             btn.innerHTML ="<i class='fa fa-refresh'></i>";
             btn.style.position = 'absolute';
@@ -73,6 +78,7 @@ function InitImagePreview(input,imageElm) {
                 InitPreviewImage(imageElm);
             })
             imageElm.appendChild(btn);
+            }
         };
         reader.readAsDataURL(input.files[0]);
     }
@@ -89,10 +95,23 @@ function InitPreviewImage(elm)
 
 function setImageAttribute(elm,imageUrl)
 {
-    elm.style.backgroundImage = 'url('+imageUrl+')';
-    elm.style.border = '1px solid #ddd';
+    const imageUrlParts = imageUrl.split('/');
+    const lastUrlParts = imageUrlParts[imageUrlParts.length-1];
+    if(lastUrlParts !== '' &&  lastUrlParts.split('.').length == 2)
+    {
+        elm.style.backgroundImage = 'url(' + imageUrl + ')';
+        elm.style.border = '1px solid #ddd';
+    }
 }
 
+function isBase64(str) {
+    if (str ===''){ return false; }
+    try {
+        return btoa(atob(str)) == str;
+    } catch (err) {
+        return false;
+    }
+}
 ```
 
 
