@@ -5,6 +5,9 @@ we just need to consider these in order to make our form nicer and also added cl
 
 [View Demo](https://js-image-preview.now.sh/)
 
+Implemented reset icon form the cssicon project by Wenting Zhang.
+[CSS ICONS by Wenting Zhang](https://cssicon.space/)
+
 Create Form
 -
 
