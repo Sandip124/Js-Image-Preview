@@ -1,4 +1,50 @@
-function InitImagePreview(input,imageElm) {
+const ImagePreviewer = ({ disp_attr = "display", before_change = null, changed = null, btn_options = {}} = {}) => {
+    const btn_cls = declare_style(btn_options.styles || {});
+    return {
+        Init : (elm) => {
+            const disp_elm_selector = elm.dataset[disp_attr];
+            const disp_elms = document.querySelectorAll(disp_elm_selector);
+            elm.addEventListener('change', e => {
+                disp_elms && disp_elms.forEach(x => {
+                    const event_data = {
+                        file: elm,
+                        display: x
+                    };
+                    before_change && before_change(e, event_data);
+                    InitImagePreview(elm, x, {
+                        ...btn_options,
+                        btn_cls,
+                        disp_btn : btn_options.show === undefined ? true : btn_options.show,
+                        title : btn_options.title === undefined ? "Reset" : btn_options.title,
+                        
+                    });
+                    changed && changed(e, event_data);
+                });
+            });
+        }
+    };
+};
+
+function declare_style(style_options) {
+    let styles = "";
+    for(let rule in style_options) {
+        styles += `${rule}: ${style_options[rule]};`;
+    }
+    const cls = "img_preview_" + [...Array(30)].map(() => Math.random().toString(36)[2]).join('');
+    const x = `
+        .${cls} {
+            ${styles}            
+        }
+    `;
+    const style_elm = document.createElement('style');
+    style_elm.innerHTML = x;
+    document.body.appendChild(style_elm);
+    return cls;
+}
+
+function InitImagePreview(input,imageElm, {
+    btn_cls, disp_btn = true, title, ...btn_options
+}) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function (e) {
@@ -9,28 +55,26 @@ function InitImagePreview(input,imageElm) {
                 imageElm.style.border = '1px solid #ddd';
             }
             if (!imageElm.hasChildNodes()) {
-            const btn = document.createElement('button');
-            btn.innerHTML ="<i class='fa fa-refresh'></i>";
-            btn.style.position = 'absolute';
-            btn.style.right= '20px';
-            btn.style.top ='30px';
-            btn.style.background = '#03A9F4';
-            btn.style.border= 'none';
-            btn.style.color= '#fff' ;
-            btn.title = "Reset";
-            btn.style.padding = '5px';
-            btn.style.borderRadius = '5px';
-            btn.style.width= '30px';
-            btn.style.boxShadow = '1px 1px 10px #646464';
-            btn.addEventListener('click',function(evt){
-                evt.preventDefault();
-                input.value = '';
-                imageElm.style.background = '';
-                imageElm.removeChild(btn);
-                InitPreviewImage(imageElm);
-            })
-            imageElm.appendChild(btn);
-        }
+                if(disp_btn) {
+                    const btn = document.createElement('button');
+                    btn.innerHTML ="<i class='fa fa-refresh'></i>";
+                    btn.title = title;
+                    btn.classList.add(btn_cls);
+                    btn.addEventListener('click',function(evt){
+                        evt.preventDefault();
+                        input.value = '';
+                        imageElm.style.background = '';
+                        imageElm.removeChild(btn);
+                        InitPreviewImage(imageElm);
+                        if(btn_options.clicked !== undefined) {
+                            btn_options.clicked(evt, {
+                                img: input
+                            });
+                        }
+                    })
+                    imageElm.appendChild(btn);
+                }
+            }
         };
         reader.readAsDataURL(input.files[0]);
     }
