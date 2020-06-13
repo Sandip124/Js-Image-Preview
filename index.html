@@ -16,16 +16,38 @@
   </head>
   <body>
     <div class="app">
-      <div id="image" class="inline-image-preview"></div>
-      <input name="file" type="file" id="file" class="form-control" />
+      <div id="image" class="image-preview inline-image-preview"></div>
+      <div  class="image-preview inline-image-preview"></div>
+      <input name="file" type="file" id="file" class="form-control" data-display=".image-preview" />
     </div>
     <script src="app.js"></script>
     <script>
       const file = document.getElementById("file");
       const imageElm = document.getElementById("image");
-      file.addEventListener("change", function () {
-        InitImagePreview(this, imageElm);
-      });
+      const btn_options = {
+        show: true,
+        title : "Reset Image",
+        clicked: () => {
+          alert('Reset clicked');
+        },
+        styles : {
+          position: 'absolute',
+          right: '20px',
+          top:'30px',
+          background: '#03A9F4',
+          border: 'none',
+          color: '#fff' ,
+          padding: '5px',
+          "border-radius": '5px',
+          width:'30px',
+          "box-shadow": '1px 1px 10px #646464'
+        }
+      };
+      ImagePreviewer({
+        changed : () => alert('Changed'),
+        before_change : () => alert('Before change'),
+        btn_options
+      }).Init(file);
     </script>
   </body>
 </html>
